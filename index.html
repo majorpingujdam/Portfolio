@@ -31,21 +31,37 @@
             z-index: 0;
         }
 
-        .ripple {
+        .ink-drop {
             position: fixed;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(200, 200, 190, 0.25) 0%, rgba(210, 210, 200, 0.15) 40%, rgba(220, 220, 210, 0) 70%);
-            transform: scale(0);
-            animation: ripple-animation 1.5s ease-out;
             pointer-events: none;
             z-index: 1;
-            border: 1px solid rgba(180, 180, 170, 0.2);
+            filter: blur(3px);
+            opacity: 0.9;
+            animation: ink-spread 3s ease-out forwards;
+            mix-blend-mode: multiply;
         }
 
-        @keyframes ripple-animation {
-            to {
-                transform: scale(6);
+        @keyframes ink-spread {
+            0% {
+                transform: scale(0) translate(0, 0);
+                opacity: 0.9;
+                filter: blur(1px);
+            }
+            20% {
+                transform: scale(1.5) translate(0, 0);
+                opacity: 0.7;
+                filter: blur(2px);
+            }
+            50% {
+                transform: scale(4) translate(0, 0);
+                opacity: 0.4;
+                filter: blur(4px);
+            }
+            100% {
+                transform: scale(7) translate(0, 0);
                 opacity: 0;
+                filter: blur(8px);
             }
         }
 
@@ -121,8 +137,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             const body = document.body;
             const container = document.querySelector('.container');
-            let lastRippleTime = 0;
-            const rippleThrottle = 200; // milliseconds between ripples
+            let lastInkTime = 0;
+            const inkThrottle = 300; // milliseconds between ink drops
+            
+            // Warm, muted ink colors that work with powder snow background
+            const inkColors = [
+                { r: 180, g: 170, b: 150 }, // Warm beige
+                { r: 190, g: 175, b: 160 }, // Soft tan
+                { r: 170, g: 160, b: 145 }, // Muted brown
+                { r: 185, g: 170, b: 155 }, // Warm gray-beige
+                { r: 175, g: 165, b: 150 }, // Dusty beige
+                { r: 195, g: 180, b: 165 }, // Light warm brown
+                { r: 165, g: 155, b: 140 }, // Muted taupe
+                { r: 188, g: 172, b: 158 }  // Soft terracotta-beige
+            ];
             
             body.addEventListener('mousemove', function(e) {
                 // Check if mouse is over the background (not over container or its children)
@@ -130,34 +158,54 @@
                 
                 if (!isOverContainer) {
                     const now = Date.now();
-                    if (now - lastRippleTime > rippleThrottle) {
-                        createRipple(e);
-                        lastRippleTime = now;
+                    if (now - lastInkTime > inkThrottle) {
+                        createInkDrop(e);
+                        lastInkTime = now;
                     }
                 }
             });
 
-            function createRipple(e) {
-                const ripple = document.createElement('div');
-                ripple.classList.add('ripple');
+            function getRandomInkColor() {
+                const color = inkColors[Math.floor(Math.random() * inkColors.length)];
+                return color;
+            }
+
+            function createInkDrop(e) {
+                const inkDrop = document.createElement('div');
+                inkDrop.classList.add('ink-drop');
                 
-                const size = 180;
-                const x = e.clientX - size / 2;
-                const y = e.clientY - size / 2;
+                // Random ink color
+                const color = getRandomInkColor();
+                const size = 50 + Math.random() * 40; // Random size between 50-90px
                 
-                ripple.style.width = size + 'px';
-                ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
+                // Create organic ink-like gradient with denser center
+                const gradient = `radial-gradient(circle, 
+                    rgba(${color.r}, ${color.g}, ${color.b}, 0.8) 0%,
+                    rgba(${color.r}, ${color.g}, ${color.b}, 0.6) 15%,
+                    rgba(${color.r}, ${color.g}, ${color.b}, 0.4) 30%,
+                    rgba(${color.r + 15}, ${color.g + 15}, ${color.b + 15}, 0.25) 50%,
+                    rgba(${color.r + 25}, ${color.g + 25}, ${color.b + 25}, 0.1) 70%,
+                    rgba(${color.r + 35}, ${color.g + 35}, ${color.b + 35}, 0) 100%
+                )`;
                 
-                body.appendChild(ripple);
+                inkDrop.style.background = gradient;
+                inkDrop.style.width = size + 'px';
+                inkDrop.style.height = size + 'px';
+                inkDrop.style.left = (e.clientX - size / 2) + 'px';
+                inkDrop.style.top = (e.clientY - size / 2) + 'px';
                 
-                // Remove ripple after animation
+                // Add slight random rotation and slight position variation for organic feel
+                const rotation = (Math.random() - 0.5) * 20;
+                inkDrop.style.transform = `rotate(${rotation}deg)`;
+                
+                body.appendChild(inkDrop);
+                
+                // Remove ink drop after animation
                 setTimeout(() => {
-                    if (ripple.parentNode) {
-                        ripple.remove();
+                    if (inkDrop.parentNode) {
+                        inkDrop.remove();
                     }
-                }, 1500);
+                }, 3000);
             }
         });
     </script>
