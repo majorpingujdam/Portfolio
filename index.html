@@ -34,18 +34,17 @@
         .ripple {
             position: fixed;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(180, 180, 170, 0.6) 0%, rgba(200, 200, 190, 0.4) 40%, rgba(220, 220, 210, 0) 70%);
+            background: radial-gradient(circle, rgba(200, 200, 190, 0.25) 0%, rgba(210, 210, 200, 0.15) 40%, rgba(220, 220, 210, 0) 70%);
             transform: scale(0);
-            animation: ripple-animation 1s ease-out;
+            animation: ripple-animation 1.5s ease-out;
             pointer-events: none;
             z-index: 1;
-            border: 2px solid rgba(160, 160, 150, 0.4);
-            box-shadow: 0 0 20px rgba(180, 180, 170, 0.3);
+            border: 1px solid rgba(180, 180, 170, 0.2);
         }
 
         @keyframes ripple-animation {
             to {
-                transform: scale(8);
+                transform: scale(6);
                 opacity: 0;
             }
         }
@@ -158,7 +157,7 @@
                     if (ripple.parentNode) {
                         ripple.remove();
                     }
-                }, 1000);
+                }, 1500);
             }
         });
     </script>
@@ -173,7 +172,7 @@
         </div>
         <div class="canva-link">
             <a href="https://www.canva.com/design/DAF7epft3To/nFUpoIn2_V9UcYtrIkIINQ/edit?utm_content=DAF7epft3To&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank">
-                Extra Work
+                For Extra Work Click Here
             </a>
         </div>
     </div>
