@@ -97,6 +97,11 @@
             border: none;
         }
 
+        /* Hide download button in PDF viewer (works for most browsers) */
+        iframe[type="application/pdf"] {
+            pointer-events: auto;
+        }
+
         .canva-link {
             margin-top: 30px;
             text-align: center;
@@ -166,7 +171,7 @@
     <div class="container">
         <h1>Shoucheng Chen - Portfolio</h1>
         <div class="pdf-container">
-            <iframe src="Ultimate Edition.pdf#toolbar=1" type="application/pdf">
+            <iframe src="Ultimate Edition.pdf#toolbar=0" type="application/pdf">
                 <p>Your browser does not support PDFs. <a href="Ultimate Edition.pdf" target="_blank">Download the PDF</a> instead.</p>
             </iframe>
         </div>
